@@ -1,0 +1,18 @@
+.Rproj.user
+.Rhistory
+.Rdata
+.httr-oauth
+.DS_Store
+resources/Dating mutations in bladder cancer.pptx
+resources/MABS_Research_Plan_BCzerniak_09-29-21_FINAL.pdf
+*.xlsx
+*.zip
+*.png
+*.vcf
+*.tsv
+resources/Maps 19 and 24 patterns.xlsx
+01 Intro/images/*
+data_raw/Data and results for spatial SFS - unnormalized/*
+*.Rds
+*.html
+02 maps 19 and 24 vs dbSNP/02 maps 19 and 24 vs dbSNP.Rmd

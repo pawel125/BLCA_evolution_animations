@@ -1,0 +1,142 @@
+---
+title: "Intro"
+author: "Pawel Kus"
+date: '`r Sys.Date()`'
+output:
+  html_notebook:
+    code_folding: hide
+    toc: yes
+---
+
+# Load data
+
+```{r,message=FALSE,warning=FALSE}
+rm(list = ls())
+devtools::load_all("../")
+set.seed(4)
+
+library(ComplexHeatmap)
+library(pracma)
+library(gganimate)
+library(plotly)
+library(tidyverse)
+theme_set(theme_minimal())
+```
+
+```{r}
+# map24_params <- readRDS("../data/map24_params.Rds")
+# map24_vafs <- readRDS("../data/map24_vafs.Rds")
+# map24_vis <- init_mapvis(map24_params, map24_vafs)
+map24_vis <- readRDS("../data/map24_vis.Rds")
+map19_vis <- readRDS("../data/map19_vis.Rds")
+map24_vis
+```
+
+```{r}
+mut_ids <- c(
+  "MAP24-MUC6-chr11-1016770",
+  "MAP24-ZSWIM1-chr20-45884033",
+  "MAP24-APC-chr5-112839465",
+  "MAP24-CACNA1A-chr19-13208878",
+  "MAP24-SCUBE2-chr11-9047414"
+)
+mut_ids <- map24_vis$mutation_params$mutation_id
+```
+
+# 1D plots
+
+```{r}
+plot_VAFs_1D(map24_vis, "MAP24-MUC6-chr11-1016770")
+```
+
+# 2D tile plots
+
+```{r}
+plot_VAFs_2D_tile(map24_vis, "MAP24-MUC6-chr11-1016770")
+```
+
+# 2D point plots
+
+```{r}
+p <- plot_VAFs_2D_points(map24_vis, mut_ids) +
+  theme(legend.position = "none")
+p
+```
+
+
+# 2D a/b plots
+
+```{r, fig.width=15, fig.height=10}
+plot_aob_2D_points(map24_vis, mut_ids) +
+  theme(
+    legend.position = "none"
+  )
+```
+
+```{r}
+plot_VAFs_1D(map24_vis, "MAP24-CSDE1-chr1-114733742")
+```
+
+Save animations
+
+```{r, fig.width=15, fig.height=10}
+p <- animate_VAFs_2D_points(map24_vis, 
+  mut_ids = map24_vis$mutation_params$mutation_id,
+  start = 60
+)
+p <- animate(p, height = 600, width = 800, end_pause = 10)
+anim_save("images/map24_VAF_t60-t83.gif", animation = p)
+
+
+p <- animate_aob_2D_points(map24_vis, 
+  mut_ids = map24_vis$mutation_params$mutation_id,
+  start = 60
+)
+p <- animate(p, height = 600, width = 800, end_pause = 10)
+anim_save("images/map24_aob_t60-t83.gif", animation = p)
+
+
+p <- animate_VAFs_2D_points(map19_vis, 
+  mut_ids = map19_vis$mutation_params$mutation_id,
+  start = 24
+)
+p <- animate(p, height = 600, width = 800, end_pause = 24)
+anim_save("images/map19_VAF_t24-t34.gif", animation = p)
+
+
+p <- animate_aob_2D_points(map19_vis, 
+  mut_ids = map19_vis$mutation_params$mutation_id,
+  start = 24
+)
+p <- animate(p, height = 600, width = 800, end_pause = 24)
+anim_save("images/map19_aob_t24-t34.gif", animation = p)
+
+#### Histograms
+
+p <- animate_aob_2D_histogram(map19_vis, 
+  mut_ids = map19_vis$mutation_params$mutation_id,
+  start = 24
+)
+p <- animate(p, height = 600, width = 800, end_pause = 24)
+anim_save("images/map19_aob_histogram_t24-t34.gif", animation = p)
+
+p <- animate_aob_2D_histogram(map24_vis, 
+  mut_ids = map24_vis$mutation_params$mutation_id,
+  start = 60
+)
+p <- animate(p, height = 600, width = 800, end_pause = 24)
+anim_save("images/map24_aob_histogram_t60-t83.gif", animation = p)
+```
+
+```{r}
+plot_aob_2D_histogram(map24_vis,
+  mut_ids = map24_vis$mutation_params$mutation_id,
+  t = last(map24_vis$times)
+)
+
+animate_aob_2D_histogram(map24_vis, 
+  mut_ids = map24_vis$mutation_params$mutation_id,
+  start = 60
+)
+```
+
